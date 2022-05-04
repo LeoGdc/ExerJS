@@ -1,75 +1,104 @@
 'use strict'
 
-import{openModal , closeModal} from './modal.js'
-import {readCustomers , createCustomer, deleteCustomer} from './customers.js'
+import {openModal, closeModal} from './modal.js'
+import {readCustomers, createClient, deleteClient, updateClient} from './cliente.js'
 
-const createRow = (customer) => {
-
+const createRow = ({nome, email, celular, cidade, id}) => {
     const row = document.createElement('tr')
     row.innerHTML = `
-    <td>${customer.nome}</td>
-    <td>${customer.email}</td>
-    <td>${customer.celular}</td>
-    <td>${customer.cidade}</td>
-    <td>
-        <button type="button" class="button green" id = "editar-${customer.id}">editar</button>
-        <button type="button" class="button red" id = "excluir-${customer.id}">excluir</button>
-    </td>
+        <td>${nome}</td>
+        <td>${email}</td>
+        <td>${celular}</td>
+        <td>${cidade}</td>
+        <td>
+            <button type="button" class="button green" onClick="editClient(${id})">editar</button>
+            <button type="button" class="button red" onClick="delClient(${id})">excluir</button>
+        </td>
     `
-
-    return row 
+    return row
 }
+
+globalThis.delClient = async (id) => {
+    await deleteClient(id)
+    updateTable
+}
+
+globalThis.editClient = async (id) => {
+    //armazenar as informações do cliente selecionado
+    const client = await readCustomers(id)
+
+    console.log(client)
+
+    //preencher o formulario com as informações
+}
+
 
 const updateTable = async () => {
 
-    const customersContainer = document.getElementById('customers-container')
-    //ler a API e armazenar o resultado em uma variavel
+    const clienteContainer = document.getElementById('clients-container')
+    //Ler a API e armazenar o resultado em uma variavel
     const customers = await readCustomers()
-    //preencher a tabela com as informações obtidas pela api
 
+    //Preencher a tabela com as informações
     const rows = customers.map(createRow)
-    customersContainer.replaceChildren(...rows)
+
+    clienteContainer.replaceChildren(...rows)
+    
 }
+const isEdit = () => document.getElementById('nome').hasAttribute('data-id')
 
-updateTable()
-
-const saveCustomer = async () => {
-    // Criar um json com as informações do cliente 
-
-    const customer = {
-        "id":"",
+const saveClient = async () => {
+    // criar um json com as informações do cliente
+    const client = {
+        "id": "",
         "nome": document.getElementById('nome').value,
         "email": document.getElementById('email').value,
-        "celular":document.getElementById('celular').value,
-        "cidade":document.getElementById('cidade').value
+        "celular": document.getElementById('celular').value,
+        "cidade": document.getElementById('cidade').value
     }
-    // Enviar o json para o Servidor API
-    await createCustomer(customer)
+
+    if(idEdit()){
+        client.id = document.getElementById('nome').dataset.id
+        updateClient(client)
+    }else{
+        await createClient(client)
+    }
+
+    // enviar o json para o servidor API
+    await createClient(client)
+
     // fechar a modal
     closeModal()
-    // atualizar os dados da tabela
+
+    // atualizar a tabela
     updateTable()
 }
-
-const actionCustomer = async (event) =>{
-    if(event.target.type == 'button'){
-
-        const [action,codigo] = envent.target.id.split('-')
-
-        if(action[0] == 'editar'){
-            //função para editar cliente
-        }else if(action == 'excluir'){
-            //função para deletar cliente
-            await deleteCustomer(codigo)
-            updateTable()
-        }
-        
-    }
+const fillform = (client) => {
+    document.getElementById('nome').value = client.nome
+    document.getElementById('email').value = client.email
+    document.getElementById('celular').value = client.celular
+    document.getElementById('cidade').value = client.cidade
+    document.getElementById('nome').dataset.id = client.id
 }
+
+
+// const actionCliente = async (event) => {
+//     if (event.target.type == 'button') {
+//         const [action, codigo] = event.target.id.split('-')
+//         if (action == 'editar') {
+//             await updateClient(codigo)
+//             openModal()
+//         } else if (action== "excluir") {
+//             await deleteClient(codigo)
+//             updateTable()
+//         }
+            
+//     }
+// }
 
 updateTable()
 
-//eventos
+// Eventos
 document.getElementById('cadastrarCliente').addEventListener('click', openModal)
-document.getElementById('salvar').addEventListener('click', saveCustomer)
-document.getElementById('customers-container').addEventListener('click', actionCustomer)
+document.getElementById('salvar').addEventListener('click', saveClient)
+document.getElementById('clients-container').addEventListener('click', actionCliente)
