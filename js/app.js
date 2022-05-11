@@ -49,7 +49,8 @@ const salvarCliente = async () => {
         "nome": document.getElementById('nome').value,
         "email": document.getElementById('email').value,
         "celular": document.getElementById('celular').value,
-        "cidade": document.getElementById('cidade').value
+        "cidade": document.getElementById('cidade').value,
+        "foto": document.getElementById('modal-image').value
       }
 
       if(form.reportValidity()){
@@ -75,6 +76,7 @@ const preencherForm = (cliente) => {
     document.getElementById('celular').value = cliente.celular
     document.getElementById('cidade').value = cliente.cidade
     document.getElementById('nome').dataset.id = cliente.id
+    document.getElementById('modal-image').src = cliente.foto
 
 }
 

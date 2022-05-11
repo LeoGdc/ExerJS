@@ -9,13 +9,24 @@
     z-index: -1;
     transition: all .5s;
 }
+.modal-form{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0 20px;
+}
 .modal-field-container{
     display: flex;
     flex-direction: column;
     gap: 20px;
     padding: 0 20px;
 }
+#modal-image{
+    width: 100%;
+    height: 100%;
+}
 .modal-image-container{
+    position: relative;
     width: 300px;
     display: flex;
     justify-content: center;
@@ -24,6 +35,12 @@
 #modal-image-input{
     display: none;
 
+}
+#modal-image-label{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
 }
 .modal.active{
     opacity: 1;
