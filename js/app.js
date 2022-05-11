@@ -41,17 +41,18 @@ const atualizarTabela = async () =>{
 const ehEdicao = () => document.getElementById('nome').hasAttribute('data-id')
 
 const salvarCliente = async () => {
+
+
     //criar um json com as informações do cliente
 
     const cliente = {
-        "id": "",
         "nome": document.getElementById('nome').value,
         "email": document.getElementById('email').value,
         "celular": document.getElementById('celular').value,
         "cidade": document.getElementById('cidade').value
       }
 
-      if(ehEdicao()){
+      if(form.reportValidity()){
           cliente.id = document.getElementById('nome').dataset.id
           await atualizarClientes(cliente)
       }else{
@@ -118,7 +119,18 @@ globalThis.delCliente = async (id) => {
 
 atualizarTabela()
 
+const maskCelular = ({target}) => {
+
+    let text = target.value
+
+    text = text.replace(/[^0-9]/,'')
+
+    text = text.replace(/(.{7})/,'$1-$2')
+
+    target.value = text
+}
 
 document.getElementById('cadastrarCliente').addEventListener('click', openModal)
 document.getElementById('salvar').addEventListener('click', salvarCliente)
+document.getElementById('celulat').addEventListener('keyup', maskCelular)
 //document.getElementById('clientes-container').addEventListener('click', editarExcluir)

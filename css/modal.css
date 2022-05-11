@@ -9,7 +9,22 @@
     z-index: -1;
     transition: all .5s;
 }
+.modal-field-container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 20px;
+}
+.modal-image-container{
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#modal-image-input{
+    display: none;
 
+}
 .modal.active{
     opacity: 1;
     z-index: 1;
